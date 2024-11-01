@@ -3055,7 +3055,7 @@ function jsPDF(options) {
         return getArrayBuffer(buildDocument());
       case "blob":
         return getBlob(buildDocument());
-      case "bloburi":
+      /*case "bloburi":
       case "bloburl":
         // Developer is responsible of calling revokeObjectURL
         if (
@@ -3190,7 +3190,7 @@ function jsPDF(options) {
         return (globalObject.document.location.href = this.output(
           "datauristring",
           options
-        ));
+        ));*/
       default:
         return null;
     }

@@ -1,7 +1,7 @@
 /** @license
  *
  * jsPDF - PDF Document creation from JavaScript
- * Version 2.5.2 Built on 2024-09-17T13:29:57.859Z
+ * Version 2.5.2 Built on 2024-11-01T07:06:36.798Z
  *                      CommitID 00000000
  *
  * Copyright (c) 2010-2021 James Hall <james@parall.ax>, https://github.com/MrRio/jsPDF
@@ -3850,93 +3850,138 @@ function jsPDF(options) {
       case "blob":
         return getBlob(buildDocument());
 
-      case "bloburi":
+      /*case "bloburi":
       case "bloburl":
         // Developer is responsible of calling revokeObjectURL
-        if (typeof globalObject.URL !== "undefined" && typeof globalObject.URL.createObjectURL === "function") {
-          return globalObject.URL && globalObject.URL.createObjectURL(getBlob(buildDocument())) || void 0;
+        if (
+          typeof globalObject.URL !== "undefined" &&
+          typeof globalObject.URL.createObjectURL === "function"
+        ) {
+          return (
+            (globalObject.URL &&
+              globalObject.URL.createObjectURL(getBlob(buildDocument()))) ||
+            void 0
+          );
         } else {
-          console.warn("bloburl is not supported by your system, because URL.createObjectURL is not supported by your browser.");
+          console.warn(
+            "bloburl is not supported by your system, because URL.createObjectURL is not supported by your browser."
+          );
         }
-
         break;
-
       case "datauristring":
       case "dataurlstring":
         var dataURI = "";
         var pdfDocument = buildDocument();
-
         try {
           dataURI = btoa(pdfDocument);
         } catch (e) {
           dataURI = btoa(unescape(encodeURIComponent(pdfDocument)));
         }
-
-        return "data:application/pdf;filename=" + options.filename + ";base64," + dataURI;
-
+        return (
+          "data:application/pdf;filename=" +
+          options.filename +
+          ";base64," +
+          dataURI
+        );
       case "pdfobjectnewwindow":
-        if (Object.prototype.toString.call(globalObject) === "[object Window]") {
-          var pdfObjectUrl = "https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.1.1/pdfobject.min.js";
-          var integrity = ' integrity="sha512-4ze/a9/4jqu+tX9dfOqJYSvyYd5M6qum/3HpCLr+/Jqf0whc37VUbkpNGHR7/8pSnCFw47T1fmIpwBV7UySh3g==" crossorigin="anonymous"';
-
-          if (options.pdfObjectUrl) {
+        if (
+          Object.prototype.toString.call(globalObject) === "[object Window]"
+        ) {
+          var pdfObjectUrl =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.1.1/pdfobject.min.js";
+          var integrity =
+            ' integrity="sha512-4ze/a9/4jqu+tX9dfOqJYSvyYd5M6qum/3HpCLr+/Jqf0whc37VUbkpNGHR7/8pSnCFw47T1fmIpwBV7UySh3g==" crossorigin="anonymous"';
+            if (options.pdfObjectUrl) {
             pdfObjectUrl = options.pdfObjectUrl;
             integrity = "";
           }
-
-          var htmlForNewWindow = "<html>" + '<style>html, body { padding: 0; margin: 0; } iframe { width: 100%; height: 100%; border: 0;}  </style><body><script src="' + pdfObjectUrl + '"' + integrity + '></script><script >PDFObject.embed("' + this.output("dataurlstring") + '", ' + JSON.stringify(options) + ");</script></body></html>";
+            var htmlForNewWindow =
+            "<html>" +
+            '<style>html, body { padding: 0; margin: 0; } iframe { width: 100%; height: 100%; border: 0;}  </style><body><script src="' +
+            pdfObjectUrl +
+            '"' +
+            integrity +
+            '></script><script >PDFObject.embed("' +
+            this.output("dataurlstring") +
+            '", ' +
+            JSON.stringify(options) +
+            ");</script></body></html>";
           var nW = globalObject.open();
-
-          if (nW !== null) {
+            if (nW !== null) {
             nW.document.write(htmlForNewWindow);
           }
-
           return nW;
         } else {
-          throw new Error("The option pdfobjectnewwindow just works in a browser-environment.");
+          throw new Error(
+            "The option pdfobjectnewwindow just works in a browser-environment."
+          );
         }
-
       case "pdfjsnewwindow":
-        if (Object.prototype.toString.call(globalObject) === "[object Window]") {
+        if (
+          Object.prototype.toString.call(globalObject) === "[object Window]"
+        ) {
           var pdfJsUrl = options.pdfJsUrl || "examples/PDF.js/web/viewer.html";
-          var htmlForPDFjsNewWindow = "<html>" + "<style>html, body { padding: 0; margin: 0; } iframe { width: 100%; height: 100%; border: 0;}  </style>" + '<body><iframe id="pdfViewer" src="' + pdfJsUrl + "?file=&downloadName=" + options.filename + '" width="500px" height="400px" />' + "</body></html>";
+          var htmlForPDFjsNewWindow =
+            "<html>" +
+            "<style>html, body { padding: 0; margin: 0; } iframe { width: 100%; height: 100%; border: 0;}  </style>" +
+            '<body><iframe id="pdfViewer" src="' +
+            pdfJsUrl +
+            "?file=&downloadName=" +
+            options.filename +
+            '" width="500px" height="400px" />' +
+            "</body></html>";
           var PDFjsNewWindow = globalObject.open();
-
-          if (PDFjsNewWindow !== null) {
+            if (PDFjsNewWindow !== null) {
             PDFjsNewWindow.document.write(htmlForPDFjsNewWindow);
             var scope = this;
-
-            PDFjsNewWindow.document.documentElement.querySelector("#pdfViewer").onload = function () {
+            PDFjsNewWindow.document.documentElement.querySelector(
+              "#pdfViewer"
+            ).onload = function() {
               PDFjsNewWindow.document.title = options.filename;
-              PDFjsNewWindow.document.documentElement.querySelector("#pdfViewer").contentWindow.PDFViewerApplication.open(scope.output("bloburl"));
+              PDFjsNewWindow.document.documentElement
+                .querySelector("#pdfViewer")
+                .contentWindow.PDFViewerApplication.open(
+                  scope.output("bloburl")
+                );
             };
           }
-
           return PDFjsNewWindow;
         } else {
-          throw new Error("The option pdfjsnewwindow just works in a browser-environment.");
+          throw new Error(
+            "The option pdfjsnewwindow just works in a browser-environment."
+          );
         }
-
       case "dataurlnewwindow":
-        if (Object.prototype.toString.call(globalObject) === "[object Window]") {
-          var htmlForDataURLNewWindow = "<html>" + "<style>html, body { padding: 0; margin: 0; } iframe { width: 100%; height: 100%; border: 0;}  </style>" + "<body>" + '<iframe src="' + this.output("datauristring", options) + '"></iframe>' + "</body></html>";
+        if (
+          Object.prototype.toString.call(globalObject) === "[object Window]"
+        ) {
+          var htmlForDataURLNewWindow =
+            "<html>" +
+            "<style>html, body { padding: 0; margin: 0; } iframe { width: 100%; height: 100%; border: 0;}  </style>" +
+            "<body>" +
+            '<iframe src="' +
+            this.output("datauristring", options) +
+            '"></iframe>' +
+            "</body></html>";
           var dataURLNewWindow = globalObject.open();
-
           if (dataURLNewWindow !== null) {
             dataURLNewWindow.document.write(htmlForDataURLNewWindow);
             dataURLNewWindow.document.title = options.filename;
           }
-
-          if (dataURLNewWindow || typeof safari === "undefined") return dataURLNewWindow;
+          if (dataURLNewWindow || typeof safari === "undefined")
+            return dataURLNewWindow;
         } else {
-          throw new Error("The option dataurlnewwindow just works in a browser-environment.");
+          throw new Error(
+            "The option dataurlnewwindow just works in a browser-environment."
+          );
         }
-
         break;
-
       case "datauri":
       case "dataurl":
-        return globalObject.document.location.href = this.output("datauristring", options);
+        return (globalObject.document.location.href = this.output(
+          "datauristring",
+          options
+        ));*/
 
       default:
         return null;
@@ -11636,7 +11681,7 @@ var AcroForm = jsPDF.AcroForm;
      * @param {Integer} [y] top-position for top-left corner of table
      * @param {Object[]} [data] An array of objects containing key-value pairs corresponding to a row of data.
      * @param {String[]} [headers] Omit or null to auto-generate headers at a performance cost
-      * @param {Object} [config.printHeaders] True to print column headers at the top of every page
+       * @param {Object} [config.printHeaders] True to print column headers at the top of every page
      * @param {Object} [config.autoSize] True to dynamically set the column widths to match the widest cell value
      * @param {Object} [config.margins] margin values for left, top, bottom, and width
      * @param {Object} [config.fontSize] Integer fontSize to use (optional)
@@ -16783,13 +16828,13 @@ var PNG = function () {
    *
    Color    Allowed      Interpretation
    Type     Bit Depths
-      0       1,2,4,8,16  Each pixel is a grayscale sample.
-      2       8,16        Each pixel is an R,G,B triple.
-      3       1,2,4,8     Each pixel is a palette index;
+       0       1,2,4,8,16  Each pixel is a grayscale sample.
+       2       8,16        Each pixel is an R,G,B triple.
+       3       1,2,4,8     Each pixel is a palette index;
                          a PLTE chunk must appear.
-      4       8,16        Each pixel is a grayscale sample,
+       4       8,16        Each pixel is a grayscale sample,
                          followed by an alpha sample.
-      6       8,16        Each pixel is an R,G,B triple,
+       6       8,16        Each pixel is an R,G,B triple,
                          followed by an alpha sample.
   */
 
@@ -25082,9 +25127,9 @@ WebPDecoder.prototype.getData = function () {
                     if (Object.prototype.toString.call(text[s]) === '[object Array]') {
                         cmapConfirm = fonts[key].metadata.cmap.unicode.codeMap[strText[s][0].charCodeAt(0)]; //Make sure the cmap has the corresponding glyph id
                     } else {
-                     }
+                      }
                 //}
-             } else {
+              } else {
                 cmapConfirm = fonts[key].metadata.cmap.unicode.codeMap[strText[s].charCodeAt(0)]; //Make sure the cmap has the corresponding glyph id
             }*/
       }

@@ -1,7 +1,7 @@
 /** @license
  *
  * jsPDF - PDF Document creation from JavaScript
- * Version 2.5.2 Built on 2024-09-17T13:29:57.860Z
+ * Version 2.5.2 Built on 2024-11-01T07:06:36.799Z
  *                      CommitID 00000000
  *
  * Copyright (c) 2010-2021 James Hall <james@parall.ax>, https://github.com/MrRio/jsPDF
@@ -3875,7 +3875,7 @@ function jsPDF(options) {
         return getArrayBuffer(buildDocument());
       case "blob":
         return getBlob(buildDocument());
-      case "bloburi":
+      /*case "bloburi":
       case "bloburl":
         // Developer is responsible of calling revokeObjectURL
         if (
@@ -4010,7 +4010,7 @@ function jsPDF(options) {
         return (globalObject.document.location.href = this.output(
           "datauristring",
           options
-        ));
+        ));*/
       default:
         return null;
     }
@@ -32457,7 +32457,7 @@ var CompoundGlyph = (function() {
     MORE_COMPONENTS,
     WE_HAVE_AN_X_AND_Y_SCALE,
     WE_HAVE_A_SCALE,
-    WE_HAVE_A_TWO_BY_TWO;
+    WE_HAVE_A_TWO_BY_TWO;
   ARG_1_AND_2_ARE_WORDS = 0x0001;
   WE_HAVE_A_SCALE = 0x0008;
   MORE_COMPONENTS = 0x0020;
